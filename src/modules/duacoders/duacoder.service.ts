@@ -78,7 +78,7 @@ export class DuacoderService {
 
     // Obtener duacoders. Recibe query con filtros y paginado
     async getDuacoders(query: any): Promise<DuacoderEntity[]> {
-        const { name, departmentId, positionId, withOnion, page, limit } = query;
+        const { name, departmentId, positionId, withOnion } = query;
         const queryBuilder = this.duacoderRepository.createQueryBuilder('duacoder')
             .leftJoinAndSelect('duacoder.department', 'department')
             .leftJoinAndSelect('duacoder.position', 'position')
@@ -99,10 +99,18 @@ export class DuacoderService {
         }
 
         // Paginación
-        if (limit && page) {
+        if (query.limit && query.page) {
+            const limit = Number(query.limit);
+            const page = Number(query.page);
+
+            if (isNaN(limit) || isNaN(page) || limit <= 0 || page < 1) {
+                throw new BadRequestException('El límite y la página deben ser números enteros positivos');
+            }
+
             queryBuilder.skip((page - 1) * limit);
             queryBuilder.take(limit);
         }
+
 
         const duacoders = await queryBuilder.getMany();
 

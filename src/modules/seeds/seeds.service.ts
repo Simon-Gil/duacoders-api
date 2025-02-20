@@ -41,10 +41,8 @@ export class SeedsService {
 
         // Insertar duacoders
         if(await this.duacoderRepository.count() === 0) {
-            const duacoderEntities : DuacoderEntity[] = [];
             duacoders.forEach(async duacoder => {
                 const { nif, name, bio, withOnion, skills, bDate, photoLink } = duacoder;
-
                 const duacoderEntity = this.duacoderRepository.create({
                     nif,
                     name,

@@ -40,7 +40,7 @@ export class DuacoderController {
     // Obtener duacoders con filtros y paginación
     @Get()
     @ApiBearerAuth()
-    @ApiOperation({ summary: 'Obtiene todos los duacoders' })
+    @ApiOperation({ summary: 'Obtiene lista de duacoders, con opciones de filtrado y paginación' })
     @ApiQuery({ name: 'name', required: false, type: String })
     @ApiQuery({name: 'withOnion', required: false, type: Boolean})
     @ApiQuery({ name: 'departmentId', required: false, type: String })
