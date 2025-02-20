@@ -84,7 +84,7 @@ export class DuacoderController {
         storage: diskStorage({
             destination: uploadPath,
             filename: (req, file, cb) => {
-                const { id } = req.params; // Id de usuario como nombre de archivo
+                const { id } = req.params; 
                 if (!id) {
                     return cb(new BadRequestException('ID de usuario requerido'), '');
                 }
@@ -92,7 +92,13 @@ export class DuacoderController {
                 const fileName = `${uuidv4()}.${fileExtension}`;
                 cb(null, fileName);
             }
-        })
+        }),
+        fileFilter: (req, file, cb) => {
+            if (!file.mimetype.startsWith('image/')) {
+                return cb(new BadRequestException('Este endpoint solo permite la subida de imágenes'), false);
+            }
+            cb(null, true);
+        }
     }))
     @ApiConsumes('multipart/form-data')
     @ApiBody({
