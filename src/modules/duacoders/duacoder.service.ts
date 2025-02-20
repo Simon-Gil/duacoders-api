@@ -43,6 +43,13 @@ export class DuacoderService {
             bDate
         });
 
+        // Comprobaciones
+        if(nif === undefined){
+            throw new BadRequestException('El campo: nif es obligatorio para la creación del duacoder');
+        }else if(withOnion === undefined){
+            throw new BadRequestException('El campo: withOnion es obligatorio para la creación del duacoder');
+        }
+
         if (bDate) {
             const datePattern = /^\d{4}-\d{2}-\d{2}$/;
             const isValidDate = datePattern.test(bDate);
