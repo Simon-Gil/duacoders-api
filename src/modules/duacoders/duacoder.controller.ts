@@ -9,13 +9,14 @@ import * as path from "path";
 import { DuacoderEntity } from "./duacoder.entity";
 import { GetDuacodersQuery } from "./dto/get-duacoders-query.dto";
 
-// Directorio de subida para imágenes de usuario
-const uploadPath = path.join(__dirname, '..','..', '..', 'static', 'duacoders_images');
+
 
 @ApiTags('Duacoders')
 @Controller('api/duacoders')
 export class DuacoderController {
-    constructor(private readonly duacoderService: DuacoderService) { }
+    constructor(
+        private readonly duacoderService: DuacoderService,
+    ) { }
 
     // Obtener detalle duacoder
     @Get(':nif')
@@ -82,7 +83,7 @@ export class DuacoderController {
     @ApiBearerAuth()
     @UseInterceptors(FileInterceptor('photo', {
         storage: diskStorage({
-            destination: uploadPath,
+            destination: path.join(__dirname, '..','..', '..', 'static', 'duacoders_images'),
             filename: (req, file, cb) => {
                 const { id } = req.params; 
                 if (!id) {
@@ -119,8 +120,6 @@ export class DuacoderController {
         if (!file) {
             throw new BadRequestException('No se ha enviado ninguna imagen.');
         }
-
-        console.log('Archivo recibido: ', file)
 
         const photoPath = `/static/duacoders_images/${file.filename}`;
 

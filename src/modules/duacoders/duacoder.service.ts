@@ -179,9 +179,7 @@ export class DuacoderService {
     async deleteImage(photoPath: string): Promise<void> {
 
         const fileName = photoPath.split('/').pop(); // Extrae el nombre del archivo
-
         if (!fileName) {
-            console.warn('No se encontró el nombre del archivo');
             return;
         }
 
