@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=12345678a
+      - DB_NAME=duacoders-db
+      - NODE_ENV=development
+      - ADMIN_API_KEY=12345678a
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - duacoders_images:/app/static/duacoders_images
+      - logs:/app/logs
+    depends_on:
+      - mariadb  
+    restart: unless-stopped
+
+  mariadb:
+    image: mariadb:10.5
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345678a
+      MYSQL_DATABASE: duacoders-db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 12345678a
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql  
+
+  logs:
+    image: fluentd
+    volumes:
+      - ./logs:/fluentd/log
+
+volumes:
+  mariadb_data:
+  duacoders_images:
+  logs:
