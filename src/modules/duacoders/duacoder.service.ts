@@ -10,14 +10,14 @@ import { join } from 'path'
 
 @Injectable()
 export class DuacoderService {
-    private readonly uploadPath = join(__dirname, '..','..', '..', 'static', 'duacoders_images');
+    private readonly uploadPath = join(__dirname, '..', '..', '..', 'static', 'duacoders_images');
     constructor(
         @InjectRepository(DuacoderEntity)
         private duacoderRepository: Repository<DuacoderEntity>,
         private companyStructureService: CompanyStructureService
     ) { }
 
-    // Obtiene detalle de duacoder. Parámetro picture indica si se devuelve con la foto
+    // Obtiene detalle de duacoder
     async getDuacoderDetail(nif: string): Promise<any> {
         const duacoder = await this.duacoderRepository.findOne({
             where: { nif },
@@ -29,6 +29,7 @@ export class DuacoderService {
         return duacoder
     }
 
+    // Crear duacoder
     async createDuacoder(createDuacoderDto: CreateDuacoderDTO): Promise<DuacoderEntity> {
         const { nif, name, bio, withOnion, skills, bDate, photoLink, departmentId, positionId } = createDuacoderDto
 
@@ -42,14 +43,13 @@ export class DuacoderService {
             bDate
         });
 
-        if(bDate){
+        if (bDate) {
             const datePattern = /^\d{4}-\d{2}-\d{2}$/;
             const isValidDate = datePattern.test(bDate);
-            if(!isValidDate){
+            if (!isValidDate) {
                 throw new BadRequestException('La fecha de nacimiento debe estar en formato YYYY-MM-DD')
             }
         }
-
 
         // Asignación de departamento 
         const department = await this.companyStructureService.getDepartmentById(departmentId)
@@ -76,11 +76,12 @@ export class DuacoderService {
         }
     }
 
+    // Obtener duacoders. Recibe query con filtros y paginado
     async getDuacoders(query: any): Promise<DuacoderEntity[]> {
         const { name, departmentId, positionId, withOnion, page, limit } = query;
         const queryBuilder = this.duacoderRepository.createQueryBuilder('duacoder')
-        .leftJoinAndSelect('duacoder.department', 'department')
-        .leftJoinAndSelect('duacoder.position', 'position')
+            .leftJoinAndSelect('duacoder.department', 'department')
+            .leftJoinAndSelect('duacoder.position', 'position')
 
         // Filtrado
         if (name) {
@@ -92,17 +93,17 @@ export class DuacoderService {
         if (positionId) {
             queryBuilder.andWhere('duacoder.positionId = :positionId', { positionId });
         }
-        if(withOnion !== undefined){
+        if (withOnion !== undefined) {
             const parsedWithOnion = withOnion === 'true' ? 1 : 0;
-            queryBuilder.andWhere('duacoder.withOnion = :parsedWithOnion', {parsedWithOnion})
+            queryBuilder.andWhere('duacoder.withOnion = :parsedWithOnion', { parsedWithOnion })
         }
 
         // Paginación
-        if(limit && page){
+        if (limit && page) {
             queryBuilder.skip((page - 1) * limit);
             queryBuilder.take(limit);
         }
-     
+
         const duacoders = await queryBuilder.getMany();
 
 
@@ -110,10 +111,12 @@ export class DuacoderService {
 
     }
 
+    // Elimina duacoder
     async deleteDuacoder(nif: string) {
         return await this.duacoderRepository.delete({ nif: nif })
     }
 
+    // Actualizar imagen de duacoder
     async updateDuacoderImage(nif: string, photoPath: string): Promise<DuacoderEntity> {
         const duacoder = await this.duacoderRepository.findOne({
             where: { nif: nif }
@@ -122,15 +125,17 @@ export class DuacoderService {
         if (!duacoder) {
             throw new BadRequestException(`No se encontró un duacoder con NIF: ${nif}`)
         }
-        if(duacoder.photoLink != photoPath){
+        // Eliminamos imagen anterior del duacoder (a no ser que tenga el mismo nombre y se sobreescriba)
+        if (duacoder.photoLink != photoPath) {
             await this.deleteImage(duacoder.photoLink)
         }
         duacoder.photoLink = photoPath
 
-        
+
         return await this.duacoderRepository.save(duacoder)
     }
 
+    // Actualizar duacoder
     async updateDuacoder(nif: string, updateDuacoderDto: Partial<CreateDuacoderDTO>) {
         const duacoder = await this.duacoderRepository.findOne({
             where: { nif: nif }
@@ -162,19 +167,19 @@ export class DuacoderService {
     }
 
 
-       // Método para eliminar la imagen
-       async deleteImage(photoPath: string): Promise<void> {
-        
+    // Elimina imagen. Recibe photoPath
+    async deleteImage(photoPath: string): Promise<void> {
+
         const fileName = photoPath.split('/').pop(); // Extrae el nombre del archivo
-    
+
         if (!fileName) {
             console.warn('No se encontró el nombre del archivo');
             return;
         }
-    
+
         // Construir la ruta absoluta correcta
         const fullPath = join(this.uploadPath, fileName);
-    
+
         try {
             await fs.promises.unlink(fullPath); // Intentar eliminar el archivo
             console.log(`Archivo eliminado: ${fullPath}`);
@@ -187,6 +192,6 @@ export class DuacoderService {
             throw new BadRequestException(`No se pudo eliminar el archivo: ${fullPath}`);
         }
     }
-    
+
 
 }

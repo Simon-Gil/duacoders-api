@@ -1,5 +1,6 @@
 import { CreateDuacoderDTO } from "src/modules/duacoders/dto/create-duacoder.dto";
 
+// Datos de prueba para duacoders
 export const duacoders: CreateDuacoderDTO[] = [
     {
         nif: '12345678A',

@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { Logger } from '@nestjs/common';
 import { ApiKeyEntity } from './api-key.entity';
 
+// Servicio de validación para garantizar que la API Key del admin está configurada
 @Injectable()
 export class AdminKeyValidationService implements OnModuleInit {
   private readonly logger = new Logger(AdminKeyValidationService.name);
@@ -17,7 +18,7 @@ export class AdminKeyValidationService implements OnModuleInit {
   async onModuleInit() {
     const adminApiKey = this.configService.get<string>('ADMIN_API_KEY');
     
-    // Comprobamos que ADMIN_API_KEY esta configurada en .env
+    // Comprobamos que ADMIN_API_KEY esta configurada
     if (!adminApiKey) {
       this.logger.error('La ADMIN_API_KEY no está configurada en las variables de entorno.');
       process.exit(1);  

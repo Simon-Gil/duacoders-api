@@ -1,5 +1,6 @@
 import { IsOptional, IsString, IsInt, Min, Max, IsBoolean } from 'class-validator';
 
+// Clase DTO para estructurar la Query recibida en el endpoint GET /duacoders
 export class GetDuacodersQuery {
   @IsOptional()
   @IsString()

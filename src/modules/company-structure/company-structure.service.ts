@@ -15,52 +15,57 @@ export class CompanyStructureService {
         private positionRepository: Repository<Position>,
     ) { }
 
+    // Creación de Departamento
     async createDepartment(createDepartmentDto: CreateDepartmentDto): Promise<Department> {
         const department = this.departmentRepository.create(createDepartmentDto);
-        try{
+        try {
             await this.departmentRepository.insert(department);
             return department
-        }catch(error){
-            if(error.code === 'ER_DUP_ENTRY'){
+        } catch (error) {
+            if (error.code === 'ER_DUP_ENTRY') {
                 throw new BadRequestException('El nombre ya está asignado a otro departamento')
             }
             throw new InternalServerErrorException('Error al crear el departamento')
         }
     }
 
+    // Obtener departamentos
     async getDepartments(): Promise<Department[]> {
         return this.departmentRepository.find();
     }
 
-    async getDepartmentById(departmentId: string): Promise<Department | null>{
+    // Obtener departamento por id
+    async getDepartmentById(departmentId: string): Promise<Department | null> {
         return this.departmentRepository.findOne({
-            where: {departmentId : departmentId}
+            where: { departmentId: departmentId }
         })
-    } 
-
+    }
+    // Creación de Puesto
     async createPosition(createPositionDto: CreatePositionDto): Promise<Position> {
         const position = this.positionRepository.create(createPositionDto);
-        try{
+        try {
             await this.positionRepository.insert(position);
             return position
-        }catch(error){
-            if(error.code === 'ER_DUP_ENTRY'){
+        } catch (error) {
+            if (error.code === 'ER_DUP_ENTRY') {
                 throw new BadRequestException('El nombre ya está asignado a otro puesto')
-            }else{
+            } else {
                 throw new InternalServerErrorException('Error al crear el puesto')
             }
         }
     }
 
-    async getPositions(): Promise<Position[]>{
+    // Obtener puestos
+    async getPositions(): Promise<Position[]> {
         return this.positionRepository.find()
     }
 
-    async getPositionById(positionId: string): Promise<Position | null>{
+    // Obtener puesto por id
+    async getPositionById(positionId: string): Promise<Position | null> {
         return this.positionRepository.findOne({
-            where: {positionId : positionId}
+            where: { positionId: positionId }
         })
-    } 
+    }
 
 
 }

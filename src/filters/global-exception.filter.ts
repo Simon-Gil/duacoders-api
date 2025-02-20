@@ -1,7 +1,8 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException, InternalServerErrorException, Logger } from '@nestjs/common';
 import { Response, Request } from 'express';
 import * as fs from 'fs';
-import * as path from 'path';
+
+// Filtro global de excepciones. Devuelve respuesta con status y mensaje de error. Registra el error en el log
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {

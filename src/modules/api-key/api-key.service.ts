@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { ApiKeyEntity } from './api-key.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { NotFoundError } from 'rxjs';
+
 
 @Injectable()
 export class ApiKeyService {

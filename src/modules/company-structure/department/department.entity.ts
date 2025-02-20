@@ -1,6 +1,7 @@
 import { DuacoderEntity } from "src/modules/duacoders/duacoder.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
+// Clase de entidad Department
 @Entity()
 export class Department{
     @PrimaryGeneratedColumn('uuid', {name: 'department_id'})

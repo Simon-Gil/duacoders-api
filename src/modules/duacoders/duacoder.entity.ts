@@ -2,6 +2,7 @@ import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
 import { Department } from "../company-structure/department/department.entity";
 import { Position } from "../company-structure/position/position.entity";
 
+// Clase de entidad para Duacoder
 @Entity({name: "duacoder"})
 export class DuacoderEntity{
     @PrimaryColumn({name: "nif"})

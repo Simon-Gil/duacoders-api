@@ -11,6 +11,7 @@ export class FileGeneratorService {
         private readonly pdfGenerator: PdfGenerator
     ) {} 
     
+    // Genera excel con lista de duacoders
     async generateDuacodersExcel(query:any){
         const duacoders = await this.duacoderService.getDuacoders(query)
         const workbook = await this.excelGenerator.generateExcel(duacoders)
@@ -21,6 +22,7 @@ export class FileGeneratorService {
           });
     }
 
+    // Genera pdf con perfil de Duacoder
     async generateDuacoderPDF(nif:string): Promise<Buffer>{
         const duacoder = await this.duacoderService.getDuacoderDetail(nif);
         if(!duacoder){

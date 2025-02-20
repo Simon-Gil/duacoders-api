@@ -2,6 +2,7 @@ import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from
 import { ApiKeyService } from '../api-key.service';
 import { Observable } from 'rxjs';
 
+// API Key Guard especial para permitir el acceso solo al admin
 @Injectable()
 export class AdminApiKeyGuard implements CanActivate {
   constructor(private readonly apiKeyService: ApiKeyService) {}
