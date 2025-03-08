@@ -43,7 +43,7 @@ export class DuacoderService {
             bDate
         });
 
-        // Comprobaciones
+        // Validaciones
         if(nif === undefined){
             throw new BadRequestException('El campo: nif es obligatorio para la creación del duacoder');
         }else if(withOnion === undefined){
